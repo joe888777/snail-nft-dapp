@@ -1,6 +1,27 @@
 import Image from "next/image";
+import { createUmi } from '@metaplex-foundation/umi-bundle-defaults'
+import { mplBubblegum } from '@metaplex-foundation/mpl-bubblegum'
+
+import { publicKey } from '@metaplex-foundation/umi'
+import {
+  fetchMerkleTree,
+  fetchTreeConfigFromSeeds,
+} from '@metaplex-foundation/mpl-bubblegum'
+import { keypair } from "@/core/setting";
+
+const merkleTreeAddress = publicKey(keypair.publicKey);
+
+// Use the RPC endpoint of your choice.
+const umi = createUmi('http://127.0.0.1:8899').use(mplBubblegum())
 
 export default function Home() {
+  const init = async () => {
+    const merkleTree = await fetchMerkleTree(umi, merkleTreeAddress)
+    const treeConfig = await fetchTreeConfigFromSeeds(umi, {
+      merkleTree: merkleTreeAddress,
+    })
+  }
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
